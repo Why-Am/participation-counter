@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+}
+
+#left-panel {
+    border-right-style: solid;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#generate-button {
+    padding: 10px;
+}
+
+#name-input {
+    height: 200px;
+}
+
+#main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-content: center;
+}
+
+.card {
+    border-style: solid;
+    border-radius: 5px;
+    width: 200px;
+    height: 150px;
+}
