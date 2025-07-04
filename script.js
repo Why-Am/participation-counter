@@ -1,17 +1,22 @@
 const nameInput = document.querySelector("#name-input");
 const generateButton = document.querySelector("#generate-button");
-const clearLocalStorageButton = document.querySelector(
-    "#clear-local-storage-button"
+const leftBottom = document.querySelector("#left-bottom");
+const skipNextInLineButton = document.querySelector(
+    "#skip-next-in-line-button"
 );
 const mainContent = document.querySelector("#main-content");
 
 let cards;
+let nextInLineOn;
 
-if (localStorage.getItem("cards") === null) {
+if (localStorage.getItem("data") === null) {
     cards = [];
+    setNextInLineOn(true);
 } else {
-    cards = JSON.parse(localStorage.getItem("cards"));
-    cards = cards.map((card) => new Card(card.name, card.count));
+    // Load stored data
+    const data = JSON.parse(localStorage.getItem("data"));
+    cards = data.cards.map((card) => new Card(card.name, card.count));
+    setNextInLineOn(data.nextInLineOn);
 }
 
 generateButton.addEventListener("click", (e) => {
@@ -24,11 +29,25 @@ generateButton.addEventListener("click", (e) => {
     updateLocalStorage();
 });
 
-clearLocalStorageButton.addEventListener("click", (e) => {
-    localStorage.clear();
-    alert(
-        "Local storage cleared. Any changes made will re-save to local storage."
-    );
+leftBottom.addEventListener("click", (e) => {
+    switch (e.target.id) {
+        case "skip-next-in-line-button":
+            // TODO
+            break;
+        case "toggle-next-in-line-button":
+            toggleNextInLine();
+            updateLocalStorage();
+            break;
+        case "reset-counters-button":
+            resetCounters();
+            break;
+        case "clear-local-storage-button":
+            localStorage.clear();
+            alert(
+                "Local storage cleared.\nNote: if this wasn't intentional, just modify a card and it will re-save"
+            );
+            break;
+    }
 });
 
 function Card(name, count = 0) {
@@ -86,6 +105,26 @@ function updateLocalStorage() {
         name: card.name,
         count: card.count,
     }));
+
+    const data = {
+        cards: formattedCards,
+        nextInLineOn: nextInLineOn,
+    };
+
     localStorage.clear();
-    localStorage.setItem("cards", JSON.stringify(formattedCards));
+    localStorage.setItem("data", JSON.stringify(data));
+}
+
+function setNextInLineOn(value) {
+    nextInLineOn = value;
+    skipNextInLineButton.disabled = !nextInLineOn;
+    // TODO
+}
+
+function toggleNextInLine() {
+    setNextInLineOn(!nextInLineOn);
+}
+
+function resetCounters() {
+    // TODO
 }
