@@ -8,12 +8,24 @@
     </head>
     <body>
         <div id="left-panel">
-            <h1>Setup</h1>
-            <textarea
-                id="name-input"
-                placeholder="Enter newline-separated names here"
-            ></textarea>
-            <button id="generate-button">Generate</button>
+            <div id="left-top">
+                <h1>Setup</h1>
+                <textarea
+                    id="name-input"
+                    placeholder="Enter newline-separated names here"
+                ></textarea>
+                <button id="generate-button">Generate</button>
+            </div>
+            <div id="left-bottom">
+                <button id="skip-next-in-line-button">Skip next-in-line</button>
+                <button id="toggle-next-in-line-button">
+                    Toggle next-in-line
+                </button>
+                <button id="reset-counters-button">Reset counters</button>
+                <button id="clear-local-storage-button">
+                    Clear local storage
+                </button>
+            </div>
         </div>
         <div id="main-content"></div>
         <script src="script.js"></script>

@@ -10,6 +10,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    justify-content: space-between;
+}
+
+#left-top,
+#left-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 #generate-button {
