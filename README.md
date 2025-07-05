@@ -4,6 +4,7 @@ Website for counting participation (specifically of a group of learners)
 
 # To do:
 
+-   [ ] Next in line
 -   [ ] Ability to add cards
 -   [ ] Ability to remove cards
 -   [ ] Reset count button
