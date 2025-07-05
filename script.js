@@ -9,46 +9,11 @@ const mainContent = document.querySelector("#main-content");
 let cards;
 let nextInLineOn;
 
-if (localStorage.getItem("data") === null) {
-    cards = [];
-    setNextInLineOn(true);
-} else {
-    // Load stored data
-    const data = JSON.parse(localStorage.getItem("data"));
-    cards = data.cards.map((card) => new Card(card.name, card.count));
-    setNextInLineOn(data.nextInLineOn);
-}
+tryToLoadData();
 
-generateButton.addEventListener("click", (e) => {
-    for (const name of nameInput.value.trim().split("\n")) {
-        if (name === "") {
-            continue;
-        }
-        cards.push(new Card(name));
-    }
-    updateLocalStorage();
-});
+generateButton.addEventListener("click", generateCards);
 
-leftBottom.addEventListener("click", (e) => {
-    switch (e.target.id) {
-        case "skip-next-in-line-button":
-            // TODO
-            break;
-        case "toggle-next-in-line-button":
-            toggleNextInLine();
-            updateLocalStorage();
-            break;
-        case "reset-counters-button":
-            resetCounters();
-            break;
-        case "clear-local-storage-button":
-            localStorage.clear();
-            alert(
-                "Local storage cleared.\nNote: if this wasn't intentional, just modify a card and it will re-save"
-            );
-            break;
-    }
-});
+leftBottom.addEventListener("click", delegateLeftBottomButtons);
 
 function Card(name, count = 0) {
     if (!new.target) {
@@ -56,10 +21,12 @@ function Card(name, count = 0) {
     }
 
     this.name = name;
+
     this.nameElement = document.createElement("h2");
     this.nameElement.textContent = this.name;
 
     this.count = count;
+
     this.countElement = document.createElement("div");
     this.countElement.textContent = this.count;
 
@@ -127,4 +94,49 @@ function toggleNextInLine() {
 
 function resetCounters() {
     // TODO
+}
+
+function generateCards() {
+    mainContent.textContent = "";
+    cards = [];
+    for (const name of nameInput.value.trim().split("\n")) {
+        if (name === "") {
+            continue;
+        }
+        cards.push(new Card(name));
+    }
+    updateLocalStorage();
+}
+
+function tryToLoadData() {
+    if (localStorage.getItem("data") === null) {
+        cards = [];
+        setNextInLineOn(true);
+    } else {
+        // Load stored data
+        const data = JSON.parse(localStorage.getItem("data"));
+        cards = data.cards.map((card) => new Card(card.name, card.count));
+        setNextInLineOn(data.nextInLineOn);
+    }
+}
+
+function delegateLeftBottomButtons(e) {
+    switch (e.target.id) {
+        case "skip-next-in-line-button":
+            // TODO
+            break;
+        case "toggle-next-in-line-button":
+            toggleNextInLine();
+            updateLocalStorage();
+            break;
+        case "reset-counters-button":
+            resetCounters();
+            break;
+        case "clear-local-storage-button":
+            localStorage.clear();
+            alert(
+                "Local storage cleared.\nNote: if this wasn't intentional, just modify a card and it will re-save"
+            );
+            break;
+    }
 }
