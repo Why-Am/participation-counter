@@ -12,6 +12,7 @@ Website for counting participation (specifically of a group of learners)
 -   [ ] Minimize sidebar
 -   [ ] Export data?
 -   [ ] Undo/redo?
+-   [ ] Scale for number of cards
 
 # Done:
 
