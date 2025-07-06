@@ -130,6 +130,7 @@ function generateCards() {
         cards.push(new Card(names[i], i));
     }
 
+    nextIndex = 0;
     setNextInLineOnTo(nextInLineOn);
     updateLocalStorage();
 }
