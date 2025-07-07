@@ -1,3 +1,4 @@
+const body = document.querySelector("body");
 const nameInput = document.querySelector("#name-input");
 const generateButton = document.querySelector("#generate-button");
 const leftBottom = document.querySelector("#left-bottom");
@@ -12,6 +13,10 @@ class Card {
         this.count = count;
         this.index = index;
 
+        this.removeButton = document.createElement("button");
+        this.removeButton.textContent = "x";
+        this.removeButton.setAttribute("class", "remove-button");
+
         this.nameElement = document.createElement("h2");
         this.nameElement.textContent = this.name;
 
@@ -24,6 +29,7 @@ class Card {
 
         this.cardElement = document.createElement("div");
         this.cardElement.setAttribute("class", "card");
+        this.cardElement.appendChild(this.removeButton);
         this.cardElement.appendChild(this.nameElement);
         this.cardElement.appendChild(this.countElement);
         this.cardElement.appendChild(this.subtractButton);
@@ -32,6 +38,9 @@ class Card {
             switch (e.target.getAttribute("class")) {
                 case "subtract-button":
                     this.decrementCount();
+                    break;
+                case "remove-button":
+                    removeCard(this.index);
                     break;
                 default:
                     this.incrementCount();
@@ -45,9 +54,9 @@ class Card {
         ++this.count;
         this.countElement.textContent = this.count;
 
-        if (nextInLineOn) cards[nextIndex].unhighlight();
+        cards[nextInLine.index].unhighlight();
         setNextIndex(this.index + 1);
-        if (nextInLineOn) cards[nextIndex].highlight();
+        cards[nextInLine.index].highlight();
 
         updateLocalStorage();
     }
@@ -61,7 +70,7 @@ class Card {
     }
 
     highlight() {
-        this.cardElement.classList.add("highlight");
+        if (nextInLine.on) this.cardElement.classList.add("highlight");
     }
 
     unhighlight() {
@@ -74,7 +83,7 @@ class Card {
     }
 
     pause() {
-        this.cardElement.classList.add("highlight-paused");
+        if (nextInLine.on) this.cardElement.classList.add("highlight-paused");
     }
 
     unpause() {
@@ -91,9 +100,7 @@ function updateLocalStorage() {
 
     const data = {
         cards: formattedCards,
-        nextInLineOn,
-        nextIndex,
-        nextInLinePaused,
+        nextInLine,
     };
 
     localStorage.clear();
@@ -102,19 +109,25 @@ function updateLocalStorage() {
 
 function tryLoadLocalStorage() {
     if (localStorage.getItem("data") === null) {
+        // Set default values
         cards = [];
-        nextInLinePaused = false;
-        nextInLineOn = true;
-        nextIndex = 0;
+        nextInLine.paused = false;
+        nextInLine.on = true;
+        nextInLine.index = 0;
+        nameInput.focus();
+        nameInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && e.ctrlKey === true) generateCards();
+        });
     } else {
         // Load stored data
         const data = JSON.parse(localStorage.getItem("data"));
         cards = data.cards.map(
             (card) => new Card(card.name, card.index, card.count)
         );
-        nextIndex = data.nextIndex;
-        setNextInLineOnTo(data.nextInLineOn);
-        setNextInLinePausedTo(data.nextInLinePaused);
+        nextInLine.index = data.nextInLine.index;
+        setNextInLineOnTo(data.nextInLine.on);
+        setNextInLinePausedTo(data.nextInLine.paused);
+        setLeftBottomButtonsDisabledTo(false);
     }
 }
 
@@ -130,18 +143,20 @@ function generateCards() {
         cards.push(new Card(names[i], i));
     }
 
-    nextIndex = 0;
-    setNextInLineOnTo(nextInLineOn);
+    nextInLine.index = 0;
+    setNextInLineOnTo(nextInLine.on);
     updateLocalStorage();
+    setLeftBottomButtonsDisabledTo(false);
 }
 
 function setNextInLineOnTo(value) {
-    nextInLineOn = value;
-    pauseNextInLineButton.disabled = !nextInLineOn;
+    nextInLine.on = value;
+    pauseNextInLineButton.disabled = !nextInLine.on;
     if (value) {
         for (let card of cards) {
-            if (nextIndex === card.index) {
+            if (nextInLine.index === card.index) {
                 card.highlight();
+                if (nextInLine.paused) card.pause(); // Bruh
             } else {
                 card.unhighlight();
             }
@@ -149,13 +164,14 @@ function setNextInLineOnTo(value) {
     } else {
         for (let card of cards) {
             card.unhighlight();
+            card.unpause();
         }
     }
     updateLocalStorage();
 }
 
 function toggleNextInLine() {
-    setNextInLineOnTo(!nextInLineOn);
+    setNextInLineOnTo(!nextInLine.on);
 }
 
 function resetCounters() {
@@ -166,6 +182,9 @@ function resetCounters() {
 
 function delegateLeftBottomButtons(e) {
     switch (e.target.id) {
+        case "add-participant":
+            addParticipant();
+            break;
         case "pause-next-in-line-button":
             togglePauseNextInLine();
             break;
@@ -177,36 +196,155 @@ function delegateLeftBottomButtons(e) {
             resetCounters();
             break;
         case "clear-local-storage-button":
-            localStorage.clear();
-            alert(
-                "Local storage cleared.\nNote: if this wasn't intentional, just modify a card and it will re-save"
-            );
+            clearLocalStorage();
             break;
     }
 }
 
+function clearLocalStorage() {
+    const modalBackground = document.createElement("div");
+    modalBackground.setAttribute("class", "modal-background");
+
+    modalBackground.innerHTML = `<div class="modal">
+        <div class="modal-text">
+            <div>Are you sure you want to clear local storage?</div>
+            <div>Note: after clearing, any further actions may cause a re-save.</div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-cancel-button">Cancel</button>
+            <button class="modal-ok-button">Okay</button>
+        </div>
+    </div>`;
+
+    body.appendChild(modalBackground);
+    document.querySelector(".modal-ok-button").focus();
+
+    modalBackground.addEventListener("click", (e) => {
+        classList = e.target.classList;
+        if (classList.contains("modal-ok-button")) {
+            localStorage.clear();
+            modalBackground.remove();
+        } else if (
+            classList.contains("modal-background") ||
+            classList.contains("modal-cancel-button")
+        )
+            modalBackground.remove();
+    });
+
+    modalBackground.addEventListener("keydown", (e) => {
+        switch (e.key) {
+            case "Enter":
+                localStorage.clear();
+                modalBackground.remove();
+                break;
+            case "Escape":
+                modalBackground.remove();
+                break;
+        }
+    });
+}
+
 function setNextIndex(val) {
-    if (!nextInLinePaused) nextIndex = val % cards.length;
+    if (!nextInLine.paused) nextInLine.index = val % cards.length;
 }
 
 function togglePauseNextInLine() {
-    setNextInLinePausedTo(!nextInLinePaused);
+    setNextInLinePausedTo(!nextInLine.paused);
 }
 
 function setNextInLinePausedTo(value) {
     pauseNextInLineButton.textContent = value
         ? "Resume next-in-line"
         : "Pause next-in-line";
-    if (value) cards[nextIndex].pause();
-    else cards[nextIndex].unpause();
-    nextInLinePaused = value;
+    if (value) cards[nextInLine.index].pause();
+    else cards[nextInLine.index].unpause();
+    nextInLine.paused = value;
     updateLocalStorage();
 }
 
+function removeCard(cardIndex) {
+    cards[cardIndex].cardElement.remove();
+    cards.splice(cardIndex, 1);
+
+    // fix indices
+    for (let i = cardIndex; i < cards.length; ++i) {
+        cards[i].index -= 1;
+    }
+
+    // fix next in line
+    if (nextInLine.index > cardIndex) {
+        nextInLine.index -= 1;
+    } else if (nextInLine.index === cardIndex) {
+        nextInLine.index %= cards.length; // accounts for deleting last card
+        cards[nextInLine.index].highlight();
+    }
+
+    if (nextInLine.paused) {
+        cards[nextInLine.index].pause();
+    }
+
+    updateLocalStorage();
+}
+
+function setLeftBottomButtonsDisabledTo(value) {
+    for (const child of leftBottom.children) child.disabled = value;
+}
+
+function addParticipant() {
+    const modalBackground = document.createElement("div");
+    modalBackground.setAttribute("class", "modal-background");
+
+    modalBackground.innerHTML = `<div class="modal">
+        <input type="text" name="modal-name-input" class="modal-name-input" placeholder="Enter participant name here" />
+        <div class="modal-buttons">
+            <button class="modal-cancel-button">Cancel</button>
+            <button class="modal-add-button">Add</button>
+        </div>
+    </div>`;
+
+    body.appendChild(modalBackground);
+
+    const newIndex = cards.length;
+    const nameInput = document.querySelector(".modal-name-input");
+    nameInput.focus();
+
+    function addNewCard() {
+        cards.push(new Card(nameInput.value, newIndex));
+        updateLocalStorage();
+        modalBackground.remove();
+    }
+
+    modalBackground.addEventListener("click", (e) => {
+        const classList = e.target.classList;
+        if (classList.contains("modal-add-button")) {
+            addNewCard();
+        } else if (
+            classList.contains("modal-cancel-button") ||
+            classList.contains("modal-background")
+        )
+            modalBackground.remove();
+    });
+
+    modalBackground.addEventListener("keydown", (e) => {
+        switch (e.key) {
+            case "Enter":
+                addNewCard();
+                break;
+            case "Escape":
+                modalBackground.remove();
+                break;
+        }
+    });
+}
+
+setLeftBottomButtonsDisabledTo(true);
+
 let cards;
-let nextIndex;
-let nextInLineOn;
-let nextInLinePaused;
+let nextInLine = {
+    index: undefined,
+    on: undefined,
+    paused: undefined,
+};
 
 tryLoadLocalStorage();
 

@@ -4,9 +4,6 @@ Website for counting participation (specifically of a group of learners)
 
 # To do:
 
--   [ ] Ability to add cards
--   [ ] Ability to remove cards
--   [ ] Focus textbox on load (if data empty)
 -   [ ] Keybind to press the next in line
 -   [ ] Text on cards avoids selection
 -   [ ] Minimize sidebar
@@ -16,6 +13,9 @@ Website for counting participation (specifically of a group of learners)
 
 # Done:
 
+-   [x] Ability to add cards
+-   [x] Ability to remove cards
+-   [x] Focus textbox on load (if data empty)
 -   [x] Make data persistent
 -   [x] Next in line
 -   [x] Reset count button

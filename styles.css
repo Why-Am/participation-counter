@@ -1,7 +1,11 @@
 body {
     margin: 0;
     height: 100vh;
+}
+
+#content {
     display: flex;
+    height: 100%;
 }
 
 #left-panel {
@@ -53,4 +57,31 @@ body {
 
 .highlight-paused {
     border-color: blue;
+}
+
+.modal-background {
+    height: 100%;
+    width: 100%;
+    z-index: 9000;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
 }

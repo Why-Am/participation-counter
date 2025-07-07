@@ -7,29 +7,32 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
-        <div id="left-panel">
-            <div id="left-top">
-                <h1>Setup</h1>
-                <textarea
-                    id="name-input"
-                    placeholder="Enter newline-separated names here"
-                ></textarea>
-                <button id="generate-button">Generate</button>
+        <div id="content">
+            <div id="left-panel">
+                <div id="left-top">
+                    <h1>Setup</h1>
+                    <textarea
+                        id="name-input"
+                        placeholder="Enter newline-separated names here"
+                    ></textarea>
+                    <button id="generate-button">Generate (ctrl+enter)</button>
+                </div>
+                <div id="left-bottom">
+                    <button id="add-participant">Add participant...</button>
+                    <button id="pause-next-in-line-button">
+                        Pause next-in-line
+                    </button>
+                    <button id="toggle-next-in-line-button">
+                        Toggle next-in-line
+                    </button>
+                    <button id="reset-counters-button">Reset counters</button>
+                    <button id="clear-local-storage-button">
+                        Clear local storage
+                    </button>
+                </div>
             </div>
-            <div id="left-bottom">
-                <button id="pause-next-in-line-button">
-                    Pause next-in-line
-                </button>
-                <button id="toggle-next-in-line-button">
-                    Toggle next-in-line
-                </button>
-                <button id="reset-counters-button">Reset counters</button>
-                <button id="clear-local-storage-button">
-                    Clear local storage
-                </button>
-            </div>
+            <div id="main-content"></div>
         </div>
-        <div id="main-content"></div>
         <script src="script.js"></script>
     </body>
 </html>
