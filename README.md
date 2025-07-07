@@ -4,6 +4,7 @@ Website for counting participation (specifically of a group of learners)
 
 # To do:
 
+-   [ ] Do not allow last card to be deleted
 -   [ ] Keybind to press the next in line
 -   [ ] Text on cards avoids selection
 -   [ ] Minimize sidebar
