@@ -2,6 +2,8 @@
 
 Website for counting participation (specifically of a group of learners)
 
+Access here: https://why-am.github.io/participation-counter/
+
 # To do:
 
 -   [ ] Do not allow last card to be deleted
