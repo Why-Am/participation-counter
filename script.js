@@ -13,9 +13,14 @@ class Card {
         this.count = count;
         this.index = index;
 
+        this.removeButtonDiv = document.createElement("div");
+        this.removeButtonDiv.setAttribute("class", "remove-button-div");
+
         this.removeButton = document.createElement("button");
         this.removeButton.textContent = "x";
         this.removeButton.setAttribute("class", "remove-button");
+
+        this.removeButtonDiv.appendChild(this.removeButton);
 
         this.nameElement = document.createElement("h2");
         this.nameElement.textContent = this.name;
@@ -29,7 +34,8 @@ class Card {
 
         this.cardElement = document.createElement("div");
         this.cardElement.setAttribute("class", "card");
-        this.cardElement.appendChild(this.removeButton);
+        this.cardElement.classList.add("unselectable");
+        this.cardElement.appendChild(this.removeButtonDiv);
         this.cardElement.appendChild(this.nameElement);
         this.cardElement.appendChild(this.countElement);
         this.cardElement.appendChild(this.subtractButton);

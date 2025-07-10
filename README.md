@@ -8,7 +8,6 @@ Access here: https://why-am.github.io/participation-counter/
 
 -   [ ] Do not allow last card to be deleted
 -   [ ] Keybind to press the next in line
--   [ ] Text on cards avoids selection
 -   [ ] Minimize sidebar
 -   [ ] Export data?
 -   [ ] Undo/redo?
@@ -23,3 +22,4 @@ Access here: https://why-am.github.io/participation-counter/
 -   [x] Next in line
 -   [x] Reset count button
 -   [x] Next in line toggle
+-   [x] Text on cards avoids selection
