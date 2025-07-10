@@ -269,6 +269,13 @@ function setNextInLinePausedTo(value) {
 }
 
 function removeCard(cardIndex) {
+    if (cards.length === 1) {
+        alert(
+            "Cannot remove last card. Please use the generate function to create a new set of cards."
+        );
+        return;
+    }
+
     cards[cardIndex].cardElement.remove();
     cards.splice(cardIndex, 1);
 

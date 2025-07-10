@@ -6,7 +6,6 @@ Access here: https://why-am.github.io/participation-counter/
 
 # To do:
 
--   [ ] Do not allow last card to be deleted
 -   [ ] Keybind to press the next in line
 -   [ ] Minimize sidebar
 -   [ ] Export data?
@@ -15,6 +14,7 @@ Access here: https://why-am.github.io/participation-counter/
 
 # Done:
 
+-   [x] Do not allow last card to be deleted
 -   [x] Ability to add cards
 -   [x] Ability to remove cards
 -   [x] Focus textbox on load (if data empty)
